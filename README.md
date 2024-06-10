@@ -48,3 +48,10 @@ Para gerenciar todas as operações do BookHub, é necessário um sistema de ban
 - Cada membro pode selecionar múltiplos gêneros como preferência (N).
 
 
+## 2: Modelagem Conceitual
+
+![Logo do BookHub](/images/Diagrama%20em%20branco%20(1).png)
+
+## 3: Moedelagem Lógica
+
+![Logo do BookHub](/images/Entity%20Relationship%20Diagram%20(1).jpg)
