@@ -237,11 +237,119 @@ WHERE ID = 1;
 Agora iremos deletar o membro de ID 1
 
 ```sql
-SELECT * FROM Membros WHERE ID = 1;
+DELETE FROM Membros
+WHERE ID = 1;
 
 ```
 
 ![Logo do BookHub](/images/delete.png)
 
 
+##Relatórios
 
+## 1: Lista de todos os membros com suas assinaturas ativas
+```sql
+SELECT Membros.Nome, Assinaturas.Tipo_Plano, Assinaturas.Valor_Mensal
+FROM Membros
+JOIN Assinaturas ON Membros.ID = Assinaturas.Membro_ID
+WHERE Assinaturas.Data_Termino >= CURDATE();
+
+```
+![Logo do BookHub](/images/1.png)
+
+
+## 2: Pedidos realizados por cada membro
+
+```sql
+SELECT Membros.Nome, Pedidos.Data_Pedido, Pedidos.Total_Pedido
+FROM Membros
+JOIN Pedidos ON Membros.ID = Pedidos.Membro_ID
+ORDER BY Membros.Nome;
+```
+
+![Logo do BookHub](/images/2.png)
+
+## 3:Gêneros preferidos por cada membro
+
+```sql
+SELECT Membros.Nome, Preferencias.Genero
+FROM Membros
+JOIN Preferencias ON Membros.ID = Preferencias.Membro_ID
+ORDER BY Membros.Nome;
+```
+![Logo do BookHub](/images/3.png)
+
+## 4:Livros mais comprados
+
+```sql
+SELECT Livros.Titulo, SUM(Pedido_Livros.Quantidade) AS Total_Comprado
+FROM Livros
+JOIN Pedido_Livros ON Livros.ID = Pedido_Livros.Livro_ID
+GROUP BY Livros.Titulo
+ORDER BY Total_Comprado DESC;
+```
+![Logo do BookHub](/images/4.png)
+
+## 5:Receita total por membro
+```sql
+SELECT Membros.Nome, SUM(Pedidos.Total_Pedido) AS Receita_Total
+FROM Membros
+JOIN Pedidos ON Membros.ID = Pedidos.Membro_ID
+GROUP BY Membros.Nome
+ORDER BY Receita_Total DESC
+
+```
+![Logo do BookHub](/images/5.png)
+
+## 6:Selecionar todos os membros que fizeram pedidos com status "Enviado".
+
+```sql
+SELECT m.Nome, p.*
+FROM Membros m
+INNER JOIN Pedidos p ON m.ID = p.Membro_ID
+WHERE p.Status_Pedido = 'Enviado';
+
+```
+![Logo do BookHub](/images/6.png)
+
+## 7:Selecionar os títulos dos livros e os nomes dos autores para os livros que foram pedidos pelo menos uma vez.
+```sql
+SELECT DISTINCT l.Titulo, l.Autor_Primeiro_Nome, l.Autor_Sobrenome
+FROM Livros l
+INNER JOIN Pedido_Livros pl ON l.ID = pl.Livro_ID;
+
+```
+![Logo do BookHub](/images/7.png)
+
+## 8:Selecionar os membros que têm assinaturas do tipo "Premium" ou "Gold".
+
+```sql
+SELECT m.Nome, a.Tipo_Plano
+FROM Membros m
+INNER JOIN Assinaturas a ON m.ID = a.Membro_ID
+WHERE a.Tipo_Plano IN ('Premium', 'Gold');
+
+```
+![Logo do BookHub](/images/8.png)
+
+## 9:Selecionar os membros que fizeram pedidos de livros do gênero 'Ficção Científica'.
+
+```sql
+SELECT DISTINCT m.Nome
+FROM Membros m
+INNER JOIN Pedidos p ON m.ID = p.Membro_ID
+INNER JOIN Pedido_Livros pl ON p.ID = pl.Pedido_ID
+INNER JOIN Livros l ON pl.Livro_ID = l.ID
+WHERE l.Genero = 'Ficção Científica';
+```
+
+![Logo do BookHub](/images/9.png)
+
+## 10:Calcular a receita total obtida com as assinaturas.
+
+```sql
+SELECT SUM(a.Valor_Mensal) AS Receita_Total
+FROM Assinaturas a;
+```
+
+![Logo do BookHub](/images/10.png)
